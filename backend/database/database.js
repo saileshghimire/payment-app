@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema({
         required: true,
         unique: true,
         lowercase: true,
+        trim: true
     },
     firstName:{
         type :String,
@@ -33,7 +34,7 @@ const UserSchema = new mongoose.Schema({
     },
     updatedDate :{
         type:Date,
-        default: Date
+        default: Date.now,
     }
 });
 
