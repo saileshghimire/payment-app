@@ -5,7 +5,7 @@ mongoose.connect('mongodb+srv://sailesh:1234@cluster0.vm8tuzu.mongodb.net/paymen
 // Define Schema 
 
 const UserSchema = new mongoose.Schema({
-    userName:{
+    username:{
         type:String,
         required: true,
         unique: true,
