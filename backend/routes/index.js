@@ -4,4 +4,4 @@ const userRouter = require("./user");
 
 router.use("/user",userRouter);
 
-model.exports = router;
+module.exports = router;
