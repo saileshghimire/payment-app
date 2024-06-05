@@ -6,7 +6,7 @@ import { User } from "../database/database";
 import { JWT_SECRET } from "../config";
 import { JsonWebTokenError } from "jsonwebtoken";
 import { authMiddleware } from "../middleware/middleware";
-import { route } from ".";
+
 
 const signupBody = Zod.object({
     username:zod.string().email(),
@@ -90,7 +90,7 @@ const updateBody = zod.obejct({
     lastName: zod.string().optional()
 });
 
-router.pu("/", authMiddleware, async (req, res) => {
+router.put("/", authMiddleware, async (req, res) => {
     const {success} = updateBody.safeParse(req.body)
     if(!success){
         res.status(411).json({
@@ -102,6 +102,34 @@ router.pu("/", authMiddleware, async (req, res) => {
     res.json({
         message: "Updated successfully"
     });
-})
+});
+
+// search information
+
+router.get("/bulk", async (req,res) =>{
+    const filter = req.query.filter || "";
+    
+    const users = await User.find({
+        $or:[{
+            firstName:{
+                "$regex": filter
+            }
+        },{
+                lastname:{
+                    "$regex": filter
+                }
+            }
+        ]
+        });
+
+        res.json({
+            user:users.map(user =>({
+                username: user.username,
+                firstName: user.firstName,
+                lastName:user.lastName,
+                _id: user._id
+            }))
+        });
+});
 
 module.exports= router ;

@@ -41,8 +41,25 @@ const UserSchema = new mongoose.Schema({
 // creting a model from userschema
 const User = mongoose.model('User', UserSchema);
 
+// account for balancing
+const accountSchema = new mongoose.Schema({
+    userId:{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    balance:{
+        type: Number,
+        required:true,
+        default:0
+    }
+})
+
+const Account = mongoose.model('Account',accountSchema);
+
 module.exports = {
-    User
+    User,
+    Account,
 };
 
 
