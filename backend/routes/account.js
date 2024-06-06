@@ -14,9 +14,9 @@ router.get("/balance", authMiddleware, async (req,res) => {
 });
 
 router.post("/transfer", authMiddleware, async (req,res) => {
-    const session = await mongoose.startSession;
+    const session = await mongoose.startSession();
     session.startTransaction();
-
+    try{
     const { amount, to } = req.body;
     const account = await Account.findOne({
         userId: req.userId
@@ -52,9 +52,20 @@ router.post("/transfer", authMiddleware, async (req,res) => {
         }
     }).session(session);
     
+    await session.commitTransaction();
+    session.endSession();
+
     res.json({
         message: "Transfer successful"
     });
+    } catch(error){
+        await session.abortTransaction();
+        session.endSession();
+        res.status(500).json({
+            message:"Transfer failed",
+            error: error.message
+        })
+    }
 });
 
 
