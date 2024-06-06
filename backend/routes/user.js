@@ -2,13 +2,13 @@ const express = require("express");
 const router = express.Router();
 const zod = require("zod");
 const jwt = require("jsonwebtoken");
-import { Account, User } from "../database/database";
-import { JWT_SECRET } from "../config";
-import { JsonWebTokenError } from "jsonwebtoken";
-import { authMiddleware } from "../middleware/middleware";
+const { Account, User } = require("../database/database");
+const { JWT_SECRET } = require("../config");
+const { JsonWebTokenError } = require("jsonwebtoken");
+const { authMiddleware } = require("../middleware/middleware");
 
 
-const signupBody = Zod.object({
+const signupBody = zod.object({
     username:zod.string().email(),
     firstName: zod.string(),
     lastName: zod.string(),
@@ -90,14 +90,14 @@ router.post("/signin", async (req,res) => {
 
 // updating user infromation
 
-const updateBody = zod.obejct({
+const updateBody = zod.object({
     password: zod.string().optional(),
     firstName: zod.string().optional(),
     lastName: zod.string().optional()
 });
 
 router.put("/", authMiddleware, async (req, res) => {
-    const {success} = updateBody.safeParse(req.body)
+    const { success } = updateBody.safeParse(req.body)
     if(!success){
         res.status(411).json({
             message:"Error while updating information"
